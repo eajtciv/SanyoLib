@@ -1,10 +1,11 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;  
 using System.Text.RegularExpressions;
 /// Dir Utility class.
 /// @author sanyo[JP]
-/// @version 0.0.5
+/// @version 0.0.6
 namespace SanyoLib
 {
   public static class DirUtil
@@ -19,7 +20,7 @@ namespace SanyoLib
     public static string[] GetDirs(string path)
     {
       string results = DosCommand(string.Format("dir \"{0}\" /AD /B", Path.GetFullPath(path)));
-      return System.Text.RegularExpressions.Regex.Split(results, System.Environment.NewLine);
+      return Regex.Split(results, System.Environment.NewLine);
     }
 
     //フォルダの存在を確認
@@ -49,6 +50,23 @@ namespace SanyoLib
       path = Path.GetFullPath(path);
       string[] pathSpl = path.Substring(0, path.Length - Convert.ToInt32(path.EndsWith("\\"))).Split('\\');
       return pathSpl[pathSpl.Length - 1];
+    }
+
+    //相対的なパスを取得
+    public static string GetRelativePath(string basePath, string targetPath){
+      string[] baseDirs = Path.GetFullPath(basePath).Split('\\');
+      string[] targetDirs = Path.GetFullPath(targetPath).Split('\\');
+      int index = 0;
+      for(int i=0; i < Math.Min(baseDirs.Length, targetDirs.Length); i++){
+        if(baseDirs[i].Equals(targetDirs[i], StringComparison.OrdinalIgnoreCase))
+          index = i +   1;
+        else
+          break;
+      }
+      StringBuilder builder = new StringBuilder();
+      builder.Insert(0, "../", baseDirs.Length - index);
+      builder.Append(string.Join("/", targetDirs, index, targetDirs.Length - index));
+      return builder.ToString();  
     }
     
     //Dosコマンドを実行
