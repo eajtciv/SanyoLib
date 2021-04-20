@@ -5,7 +5,7 @@ using System.Text;
 using UnityEngine;
 /// Wavefront .obj file Utility class.
 /// @author sanyo[JP]
-/// @version 0.0.1
+/// @version 0.0.2
 namespace SanyoLib
 {
   public static class ObjFormatUtil
@@ -14,7 +14,9 @@ namespace SanyoLib
     {
       List<Vector3> vertices = new List<Vector3>();
       List<Color> colors = new List<Color>();
+      List<Vector3> normalIndexs = new List<Vector3>();
       List<Vector3> normals = new List<Vector3>();
+      List<Vector2> uvIndexs = new List<Vector2>();
       List<Vector2> uvs = new List<Vector2>();
       List<int> triangles = new List<int>();
       //Read Obj
@@ -32,18 +34,27 @@ namespace SanyoLib
             if(elements.Length > 6)
               colors.Add(new Color(floats[4], floats[5], floats[6]));
           }
-          else if (elements[0].Equals("vn"))
+          else if (elements[0].Equals("vn")){
+            normalIndexs.Add(new Vector3(floats[1], floats[2], floats[3]));
             normals.Add(new Vector3(floats[1], floats[2], floats[3]));
-          else if (elements[0].Equals("vt"))
+          }else if (elements[0].Equals("vt")){
+            uvIndexs.Add(new Vector2(floats[1], floats[2]));
             uvs.Add(new Vector2(floats[1], floats[2]));
+          }
           else if (elements[0].Equals("f"))
           {
             if (elements.Length > 4)
               throw new System.FormatException("not a triangle..");
 
-            triangles.Add(int.Parse(elements[3].Split('/')[0])-1);
-            triangles.Add(int.Parse(elements[2].Split('/')[0])-1);
-            triangles.Add(int.Parse(elements[1].Split('/')[0])-1);
+            for(int i=3; i > 0; i--){
+              string[] elem1 = elements[i].Split('/');
+              int index = int.Parse(elem1[0])-1;
+              triangles.Add(index);
+              if(elem1.Length > 1 && index < uvIndexs.Count)
+                uvs[index] = uvIndexs[int.Parse(elem1[1])-1];
+              if(elem1.Length > 2 && index < normalIndexs.Count)
+                normals[index] = normalIndexs[int.Parse(elem1[2])-1];
+            }
           }
         }
       }

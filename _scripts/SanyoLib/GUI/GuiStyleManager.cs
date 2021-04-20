@@ -61,6 +61,8 @@ namespace SanyoLib
                     style.clipping = TextClipping.Clip;
                   else if(name.Equals("cverflow"))
                     style.clipping = TextClipping.Overflow;
+                }else if(element[0].Equals("alignment")){
+                  style.alignment = (TextAnchor) Enum.Parse(typeof(TextAnchor), element[1]);
                 }else if(element[0].Equals("imagePosition")){
                   style.imagePosition = (ImagePosition)Enum.Parse(typeof(ImagePosition), element[1]);
                 }else if(element[0].Contains(".")){
@@ -115,7 +117,8 @@ namespace SanyoLib
             style.onFocused.background = ReadTexture2D(Path.Combine(dir, "onFocused.png"));
             style.onFocused.textColor = new Color(1, 1, 1);
           }
-          this[SanyoLib.DirUtil.GetName(dirName)] = style;
+          style.name = SanyoLib.DirUtil.GetName(dirName);
+          this[style.name] = style;
         }catch(Exception e){
         }
       }
