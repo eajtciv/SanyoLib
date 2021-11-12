@@ -15,7 +15,10 @@ namespace SanyoLib
     }
 
     private int GetInt(string text) => int.Parse(Regex.Match(text, "(<.*>)?(?<integer>[0-9]+)(<.*>)?").Groups["integer"].Value);
-
+    //FFFFFF nomal
+    //80FF80 script 
+    //FFCC33 script+atacck 
+    //FF8080 atacck
     public Color GetTagColor() => this.name.color;
     public string GetUserName() => this.name.text.Split('\n')[1];
     public string GetMachineName() => this.name.text.Split('\n')[0];
