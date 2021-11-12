@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 /// Json .json file Utility class.
 /// @author sanyo[JP]
-/// @version 0.0.1
+/// @version 0.0.2
 namespace SanyoLib  
 { 
   public class JsonUtil {
@@ -155,9 +155,9 @@ namespace SanyoLib
 
       private void SerializeColor(Color color){
         Dictionary<string, float> dict = new Dictionary<string, float>();
-        dict["r"] = color.r;
-        dict["g"] = color.g;
-        dict["b"] = color.b;
+        dict["r"] = (int)(color.r*255);
+        dict["g"] = (int)(color.g*255);
+        dict["b"] = (int)(color.b*255);
         this.SerializeObject(dict as IDictionary);
       }
 
